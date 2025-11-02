@@ -195,7 +195,7 @@
                 <button class="tab-btn" data-tab="home">Home Page</button>
             </div>
 
-            <form class="admin-form" id="admin-form">
+            <form class="admin-form" id="admin-form" novalidate>
                 <!-- Branding & Hero Section -->
                 <div class="tab-content active" data-tab="branding">
                     <h2>Branding & Hero Section</h2>
@@ -480,11 +480,36 @@
         </div>
     </section>
 
-    <script src="js/index.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/nav-auth.js"></script>
-
+    <script src="js/data-loader.js"></script>
     <script src="js/admin-check.js"></script>
     <script src="js/admin.js"></script>
+    <script>
+        // Update admin panel logo when data changes (via data-loader)
+        (function() {
+            function updateAdminHeaderLogo() {
+                const logoEl = document.querySelector('header .logo');
+                if (logoEl && window.BrandFuelDataLoader) {
+                    const { data, logoImage } = window.BrandFuelDataLoader.load();
+                    const logoSize = data.logoSize || 60;
+                    
+                    if (logoImage) {
+                        logoEl.innerHTML = `<img src="${logoImage}" alt="Brand Fuel Logo" style="height:${logoSize}px;">`;
+                    } else {
+                        logoEl.innerHTML = `<img src="assets/logo.svg" alt="Brand Fuel Logo" style="height:${logoSize}px;">`;
+                    }
+                }
+            }
+
+            // Initialize logo update listener
+            if (window.BrandFuelDataLoader) {
+                window.BrandFuelDataLoader.init(function(updatedData) {
+                    console.log('admin.html: Logo updated, refreshing header logo');
+                    updateAdminHeaderLogo();
+                });
+            }
+        })();
+    </script>
 </body>
 </html>

@@ -7,6 +7,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabs = document.querySelectorAll('.tab-btn');
     const contents = document.querySelectorAll('.tab-content');
 
+    // Check if form exists
+    if (!form) {
+        console.error('Admin form not found!');
+        return;
+    }
+
+    // --- Logo Update Function for Admin Panel Header ---
+    function updateAdminHeaderLogo() {
+        const logoEl = document.querySelector('header .logo');
+        if (logoEl) {
+            const logoImage = localStorage.getItem('logo-image');
+            const data = JSON.parse(localStorage.getItem('brandFuelData')) || {};
+            const logoSize = data.logoSize || 60;
+            
+            if (logoImage) {
+                logoEl.innerHTML = `<img src="${logoImage}" alt="Brand Fuel Logo" style="height:${logoSize}px;">`;
+            } else {
+                logoEl.innerHTML = `<img src="assets/logo.svg" alt="Brand Fuel Logo" style="height:${logoSize}px;">`;
+            }
+        }
+    }
+
     // --- Event Listeners ---
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
@@ -17,23 +39,94 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Form submit handler with error handling
     form.addEventListener('submit', (e) => {
         console.log('Form submitted.');
         e.preventDefault();
-        saveData();
-        alert('Changes saved successfully!');
+        
+        try {
+            saveData();
+            alert('Changes saved successfully!');
+        } catch (error) {
+            console.error('Error saving data:', error);
+            alert('Error saving changes: ' + error.message + '. Please check the console for details.');
+        }
     });
+
+    // Also add click handler to the submit button as backup
+    const saveButton = form.querySelector('button[type="submit"]');
+    if (saveButton) {
+        saveButton.addEventListener('click', function(e) {
+            console.log('Save button clicked directly.');
+            // If form submit doesn't fire for some reason, trigger save manually
+            // The form submit handler will still catch it, but this ensures it works
+        });
+        
+        // Also try finding by class name as backup
+        const saveButtonByClass = document.querySelector('.primary-btn');
+        if (saveButtonByClass && saveButtonByClass !== saveButton) {
+            saveButtonByClass.addEventListener('click', function(e) {
+                if (e.target.type === 'submit') {
+                    console.log('Save button found by class clicked.');
+                }
+            });
+        }
+    } else {
+        console.warn('Save button not found! Looking for alternative...');
+        // Try alternative selector
+        const altButton = document.querySelector('.primary-btn[type="submit"]');
+        if (altButton) {
+            altButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Alternative save button clicked.');
+                try {
+                    saveData();
+                    alert('Changes saved successfully!');
+                } catch (error) {
+                    console.error('Error saving data:', error);
+                    alert('Error saving changes: ' + error.message + '. Please check the console for details.');
+                }
+            });
+        }
+    }
 
     document.getElementById('logo-file').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = function(event) {
-                document.getElementById('logo-data-url').value = event.target.result;
-                ensureLogoPreview(event.target.result);
+                const dataUrl = event.target.result;
+                document.getElementById('logo-data-url').value = dataUrl;
+                ensureLogoPreview(dataUrl);
+                // Also update header logo immediately for preview
+                updateAdminHeaderLogo();
             };
             reader.readAsDataURL(file);
         }
+    });
+
+    // Sync logo size inputs
+    document.getElementById('logo-size-range')?.addEventListener('input', function(e) {
+        const value = e.target.value;
+        document.getElementById('logo-size').value = value;
+        const logoPreview = document.getElementById('logo-preview');
+        if (logoPreview) {
+            logoPreview.style.height = value + 'px';
+        }
+        // Update header logo size in real-time
+        updateAdminHeaderLogo();
+    });
+
+    document.getElementById('logo-size')?.addEventListener('input', function(e) {
+        const value = Math.min(Math.max(24, parseInt(e.target.value) || 60), 240);
+        document.getElementById('logo-size-range').value = value;
+        e.target.value = value;
+        const logoPreview = document.getElementById('logo-preview');
+        if (logoPreview) {
+            logoPreview.style.height = value + 'px';
+        }
+        // Update header logo size in real-time
+        updateAdminHeaderLogo();
     });
 
     // --- Data Handling ---
@@ -45,23 +138,77 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function saveData() {
         console.log('saveData function called.');
-        gatherData();
-        localStorage.setItem('brandFuelData', JSON.stringify(siteData));
-        if (siteData.logoImage) {
-            localStorage.setItem('logo-image', siteData.logoImage);
-        } else {
-            localStorage.removeItem('logo-image');
+        
+        try {
+            // Gather all form data
+            gatherData();
+            
+            // Validate that we have data
+            if (!siteData) {
+                throw new Error('No data gathered from form');
+            }
+            
+            // Save to localStorage
+            try {
+                localStorage.setItem('brandFuelData', JSON.stringify(siteData));
+                console.log('Data saved to localStorage:', siteData);
+            } catch (storageError) {
+                // Handle quota exceeded or other storage errors
+                if (storageError.name === 'QuotaExceededError') {
+                    throw new Error('Storage quota exceeded. Please clear some space and try again.');
+                }
+                throw storageError;
+            }
+            
+            // Save logo image separately
+            if (siteData.logoImage) {
+                try {
+                    localStorage.setItem('logo-image', siteData.logoImage);
+                } catch (logoError) {
+                    console.warn('Could not save logo image:', logoError);
+                }
+            } else {
+                localStorage.removeItem('logo-image');
+            }
+            
+            // Set timestamp for update detection
+            const timestamp = new Date().getTime();
+            localStorage.setItem('brandfuel-content-updated', timestamp);
+            
+            // Dispatch custom event for same-tab updates
+            try {
+                window.dispatchEvent(new CustomEvent('brandfuel-data-updated', {
+                    detail: { timestamp }
+                }));
+            } catch (eventError) {
+                console.warn('Could not dispatch custom event:', eventError);
+            }
+            
+            // Update preview
+            updateConfigPreview();
+            
+            // Update admin panel header logo immediately
+            updateAdminHeaderLogo();
+            
+            console.log('Data saved successfully. Timestamp:', timestamp);
+        } catch (error) {
+            console.error('Error in saveData:', error);
+            throw error; // Re-throw to be caught by form handler
         }
-        localStorage.setItem('brandfuel-content-updated', new Date().getTime());
-        updateConfigPreview();
     }
 
     function gatherData() {
         console.log('gatherData function called.');
-        const getValue = (id) => document.getElementById(id)?.value || '';
-        siteData = {
+        const getValue = (id) => {
+            const el = document.getElementById(id);
+            return el ? (el.value || '') : '';
+        };
+        
+        try {
+            const logoDataUrlEl = document.getElementById('logo-data-url');
+            siteData = {
             logoText: getValue('logo-text'),
-            logoImage: document.getElementById('logo-data-url').value,
+            logoImage: logoDataUrlEl ? logoDataUrlEl.value : '',
             fontFamily: getValue('font-select'),
             logoSize: getValue('logo-size'),
             heroHeadline: getValue('hero-headline'),
@@ -132,6 +279,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 paragraph: getValue('login-paragraph')
             }
         };
+        } catch (error) {
+            console.error('Error gathering data from form:', error);
+            throw new Error('Failed to gather form data: ' + error.message);
+        }
     }
 
     function populateForm() {
@@ -248,6 +399,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Init ---
     loadData();
+    updateAdminHeaderLogo(); // Load logo on page load
 
     // --- Dynamic Item Creation ---
     function createServiceElement(index, item = {}){

@@ -193,6 +193,7 @@
                 b.classList.add('active');
                 authRole.value = b.dataset.role;
                 authMessage.textContent = '';
+                console.log('Role selected:', b.dataset.role);
             }));
 
             cancelBtn.addEventListener('click', ()=>{
@@ -207,71 +208,117 @@
                 const role = authRole.value;
                 const username = document.getElementById('auth-username').value.trim();
                 const password = document.getElementById('auth-password').value.trim();
-                if(!username || !password){ authMessage.textContent = 'Please enter both username and password.'; return; }
+                
+                console.log('Login attempt:', { mode, role, username, hasPassword: !!password });
+                
+                if(!username || !password){ 
+                    authMessage.textContent = 'Please enter both username and password.';
+                    authMessage.style.color = '#ff6b35';
+                    return; 
+                }
+
+                // Check if BFAuth is available
+                if (!window.BFAuth) {
+                    authMessage.textContent = 'Authentication system not loaded. Please refresh the page.';
+                    authMessage.style.color = '#ff6b35';
+                    console.error('BFAuth not available');
+                    return;
+                }
 
                 if(mode === 'signup'){
                     if (role === 'admin') {
                         authMessage.textContent = 'Admin signup is not allowed.';
+                        authMessage.style.color = '#ff6b35';
                         return;
                     }
                     const fullname = document.getElementById('auth-fullname').value.trim();
                     const company = document.getElementById('auth-company').value.trim();
                     const email = document.getElementById('auth-email').value.trim();
                     const res = window.BFAuth.signup(username, password, role, { fullname, company, email });
-                    if(!res.ok){ authMessage.textContent = res.message || 'Could not sign up.'; return; }
+                    if(!res.ok){ 
+                        authMessage.textContent = res.message || 'Could not sign up.';
+                        authMessage.style.color = '#ff6b35';
+                        return; 
+                    }
                     
                     // Auto sign in after signup
                     window.BFAuth.signin(username, password, role);
                     authMessage.textContent = 'Signup successful. Redirecting...';
+                    authMessage.style.color = '#4caf50';
                     setTimeout(()=> {
                         if(role === 'admin') window.location.href = 'admin.html'; else window.location.href = 'index.html';
                     }, 500);
                 } else {
                     const res = window.BFAuth.signin(username, password, role);
-                    if(!res.ok){ authMessage.textContent = res.message || 'Sign in failed.'; return; }
+                    if(!res.ok){ 
+                        authMessage.textContent = res.message || 'Sign in failed. Please check your username, password, and role selection.';
+                        authMessage.style.color = '#ff6b35';
+                        console.error('Login failed:', res.message);
+                        return; 
+                    }
                     authMessage.textContent = 'Signed in. Redirecting...';
+                    authMessage.style.color = '#4caf50';
                     setTimeout(()=> {
-                        if(role === 'admin') window.location.href = 'admin.html'; else window.location.href = 'index.html';
+                        if(role === 'admin') {
+                            window.location.href = 'admin.html';
+                        } else {
+                            window.location.href = 'index.html';
+                        }
                     }, 300);
                 }
             });
         })();
     </script>
+    <script src="js/data-loader.js"></script>
     <script>
-        // Load dynamic logo
+        // Load dynamic logo with automatic refresh
         (function() {
-            const data = JSON.parse(localStorage.getItem('brandFuelData')) || {};
-            
-            // Load logo
-            const logoImage = localStorage.getItem('logo-image');
-            const logoSize = data.logoSize || 60;
-            const logoImgEl = document.getElementById('login-logo-img');
-            if (logoImgEl) {
-                if (logoImage) {
-                    logoImgEl.src = logoImage;
+            function populateLoginPage({ data, logoImage }) {
+                if (!data) data = {};
+                
+                // Load logo
+                const logoSize = data.logoSize || 60;
+                const logoImgEl = document.getElementById('login-logo-img');
+                if (logoImgEl) {
+                    if (logoImage) {
+                        logoImgEl.src = logoImage;
+                    }
+                    logoImgEl.style.height = `${logoSize}px`;
                 }
-                logoImgEl.style.height = `${logoSize}px`;
+
+                // Load content
+                if (data.loginPage) {
+                    const headlineEl = document.getElementById('login-page-headline');
+                    if (headlineEl) {
+                        headlineEl.textContent = data.loginPage.headline;
+                    }
+                    const paragraphEl = document.getElementById('login-page-paragraph');
+                    if (paragraphEl) {
+                        paragraphEl.textContent = data.loginPage.paragraph;
+                    }
+                }
             }
 
-            // Load content
-            if (data.loginPage) {
-                const headlineEl = document.getElementById('login-page-headline');
-                if (headlineEl) {
-                    headlineEl.textContent = data.loginPage.headline;
+            // Initialize
+            function init() {
+                const initialData = window.BrandFuelDataLoader ? window.BrandFuelDataLoader.load() : { data: {}, logoImage: null };
+                populateLoginPage(initialData);
+
+                // Set up automatic refresh if data-loader is available
+                if (window.BrandFuelDataLoader) {
+                    window.BrandFuelDataLoader.init(function(updatedData) {
+                        console.log('login.html: Data updated, refreshing page content');
+                        populateLoginPage(updatedData);
+                    });
                 }
-                const paragraphEl = document.getElementById('login-page-paragraph');
-                if (paragraphEl) {
-                    paragraphEl.textContent = data.loginPage.paragraph;
-                }
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                setTimeout(init, 0);
             }
         })();
-    </script>
-    <script>
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'brandfuel-content-updated') {
-                window.location.reload();
-            }
-        });
     </script>
 </body>
 </html>
