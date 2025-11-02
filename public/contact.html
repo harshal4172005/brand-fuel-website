@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Brand Fuel</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tomorrow:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body data-auth="any">
+    <header class="top-nav">
+        <div class="container">
+            <a href="index.html" class="logo"></a>
+            <nav>
+                <ul>
+                    <li><a href="work.html">Work</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="testimonials.html">Testimonials</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html" class="cta-button active">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Contact Us</h1>
+            <p>Get in touch with the Fuel team</p>
+        </div>
+    </section>
+
+    <section class="contact-section">
+        <div class="container">
+            <div class="contact-wrapper">
+                <div class="contact-form">
+                    <h3>Send us a message</h3>
+                    <form id="contact-form">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="primary-cta">Send Message</button>
+                    </form>
+                </div>
+                <div class="contact-details">
+                    <h3>Contact Information</h3>
+                    <p>Fill up the form and our team will get back to you within 24 hours.</p>
+                    <ul>
+                        <li id="contact-phone-display"><i class="icon-phone"></i> <span id="contact-phone-text">+91 95128 41201</span></li>
+                        <li id="contact-email-display"><i class="icon-email"></i> <span id="contact-email-text">brandfueldigital@gmail.com</span></li>
+                        <li id="contact-address-display"><i class="icon-location"></i> <span id="contact-address-text">123 Business Rd, Suite 100, Anytown, USA</span></li>
+                    </ul>
+                    <div class="socials">
+                        <a href="#">LinkedIn</a>
+                        <a href="#">Twitter</a>
+                        <a href="#">Instagram</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="socials">
+                    <a href="#">LinkedIn</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">Instagram</a>
+                </div>
+                <div class="legal">
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                </div>
+                <div class="contact">
+                    <p>brandfueldigital@gmail.com</p>
+                    <p><a href="tel:+919512841201">+91 95128 41201</a></p>
+                </div>
+                <div class="newsletter">
+                    <input type="email" placeholder="Subscribe to our newsletter">
+                    <button>Subscribe</button>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/nav-auth.js"></script>
+
+    <script src="js/index.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Fuel Admin Panel</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tomorrow:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        .admin-panel {
+            padding: 40px 0;
+            background: #f9f9f9;
+        }
+        .admin-form {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .admin-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        .tab-btn {
+            padding: 12px 24px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Tomorrow', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .tab-btn.active {
+            background: #ff6b35;
+            color: #fff;
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        h2 {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f5f5f5;
+        }
+        h3 {
+            margin: 20px 0 15px;
+            font-size: 18px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-family: 'Tomorrow', sans-serif;
+            transition: border-color 0.3s;
+        }
+        input:focus, textarea:focus {
+            border-color: #ff6b35;
+            outline: none;
+        }
+        .service-item, .testimonial-item, .work-item {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #f5f5f5;
+        }
+        .primary-btn {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            flex: 1;
+        }
+        .preview-btn {
+            background: #f5f5f5;
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            flex: 1;
+        }
+        .secondary-btn {
+            background: #fff;
+            color: #ff6b35;
+            border: 2px solid #ff6b35;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        .secondary-btn:hover {
+            background: #ff6b35;
+            color: #fff;
+        }
+        .logo-upload {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .admin-form {
+                padding: 20px;
+            }
+            .admin-tabs {
+                flex-wrap: wrap;
+            }
+            .tab-btn {
+                flex-basis: 50%; /* Two tabs per row */
+                text-align: center;
+            }
+            .form-actions {
+                flex-direction: column;
+            }
+            h1 {
+                font-size: 28px;
+            }
+            h2 {
+                font-size: 22px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tab-btn {
+                flex-basis: 100%; /* One tab per row */
+            }
+        }
+    </style>
+</head>
+<body data-auth="admin">
+    <header class="top-nav">
+        <div class="container">
+            <a href="index.html" class="logo"></a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Back to Site</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="admin-panel">
+        <div class="container">
+            <h1>Admin Panel</h1>
+            <div class="admin-tabs">
+                <button class="tab-btn active" data-tab="branding">Branding & Hero</button>
+                <button class="tab-btn" data-tab="services">Services</button>
+                <button class="tab-btn" data-tab="work">Work</button>
+                <button class="tab-btn" data-tab="testimonials">Testimonials</button>
+                <button class="tab-btn" data-tab="footer">Footer & Contact</button>
+                <button class="tab-btn" data-tab="login">Login Page</button>
+                <button class="tab-btn" data-tab="home">Home Page</button>
+            </div>
+
+            <form class="admin-form" id="admin-form">
+                <!-- Branding & Hero Section -->
+                <div class="tab-content active" data-tab="branding">
+                    <h2>Branding & Hero Section</h2>
+                    <div class="form-group">
+                        <label for="logo-text">Logo Text</label>
+                        <input type="text" id="logo-text" value="Brand Fuel">
+                    </div>
+                    <div class="logo-upload">
+                        <label for="logo-file">Upload New Logo Image</label>
+                        <input type="file" id="logo-file" accept="image/*">
+                        <input type="hidden" id="logo-data-url">
+                        <div style="margin-top:12px; display:flex; gap:12px; align-items:center;">
+                            <label for="logo-size" style="margin:0;font-weight:600;">Logo size (px)</label>
+                            <input type="range" id="logo-size-range" min="24" max="240" value="60" style="flex:1;">
+                            <input type="number" id="logo-size" min="24" max="240" value="60" style="width:80px;">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="font-select">Website Font</label>
+                        <select id="font-select" style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 6px; font-family: 'Tomorrow', sans-serif;">
+                            <option value="Tomorrow">Tomorrow (Current)</option>
+                            <option value="Roboto">Roboto</option>
+                            <option value="Open Sans">Open Sans</option>
+                            <option value="Lato">Lato</option>
+                            <option value="Montserrat">Montserrat</option>
+                            <option value="Poppins">Poppins</option>
+                            <option value="Nunito">Nunito</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="hero-headline">Hero Headline</label>
+                        <input type="text" id="hero-headline" value="We fuel next-gen DTC brands for 3x growth.">
+                    </div>
+                    <div class="form-group">
+                        <label for="hero-subhead">Hero Subhead</label>
+                        <input type="text" id="hero-subhead" value="Proven strategies">
+                    </div>
+                    <div class="form-group">
+                        <label for="primary-cta">Primary CTA Text</label>
+                        <input type="text" id="primary-cta" value="Book a 15-min Fuel Call">
+                    </div>
+                    <div class="form-group">
+                        <label for="secondary-cta-text">Secondary CTA Text</label>
+                        <input type="text" id="secondary-cta-text" value="See Our Work">
+                    </div>
+                    <div class="form-group">
+                        <label for="trust-metric">Trust Metric</label>
+                        <input type="text" id="trust-metric" value="150% average growth">
+                    </div>
+                </div>
+
+                <!-- Services Section -->
+                <div class="tab-content" data-tab="services">
+                    <h2>Services Section</h2>
+                    <div class="form-group">
+                        <label for="services-headline">Services Headline</label>
+                        <input type="text" id="services-headline" value="What We Do">
+                    </div>
+                    
+                    <div class="service-items">
+                        <div class="form-group service-item">
+                            <h3>Service 1</h3>
+                            <input type="text" id="service1-title" placeholder="Service Title" value="Brand Strategy">
+                            <textarea id="service1-desc" placeholder="Service Description" rows="3">Developing compelling brand narratives and positioning</textarea>
+                            <textarea data-points placeholder="Service Points (one per line)" rows="4">Market Research&#10;Competitor Analysis&#10;Brand Positioning&#10;Target Audience Definition</textarea>
+                        </div>
+                        
+                        <div class="form-group service-item">
+                            <h3>Service 2</h3>
+                            <input type="text" id="service2-title" placeholder="Service Title" value="Creative Design">
+                            <textarea id="service2-desc" placeholder="Service Description" rows="3">Creating stunning visuals that capture attention</textarea>
+                            <textarea data-points placeholder="Service Points (one per line)" rows="4">Brand Identity Design&#10;Marketing Collateral&#10;UI/UX Design&#10;Package Design</textarea>
+                        </div>
+                        
+                        <div class="form-group service-item">
+                            <h3>Service 3</h3>
+                            <input type="text" id="service3-title" placeholder="Service Title" value="Digital Marketing">
+                            <textarea id="service3-desc" placeholder="Service Description" rows="3">Driving growth through digital channels</textarea>
+                            <textarea data-points placeholder="Service Points (one per line)" rows="4">Social Media Marketing&#10;Content Strategy&#10;SEO Optimization&#10;PPC Campaigns</textarea>
+                        </div>
+                    </div>
+                    <button type="button" id="add-service" class="secondary-btn">+ Add Service</button>
+                </div>
+
+                <!-- Work Section -->
+                <div class="tab-content" data-tab="work">
+                    <h2>Work & Case Studies</h2>
+                    <div class="form-group">
+                        <label for="work-headline">Work Section Headline</label>
+                        <input type="text" id="work-headline" value="Our Work">
+                    </div>
+                    <div class="form-group">
+                        <label for="spotlight-case">Spotlight Case Study Content</label>
+                        <textarea id="spotlight-case" rows="5">Interactive before/after content here.</textarea>
+                    </div>
+                    <div class="work-items">
+                        <div class="form-group work-item">
+                            <h3>Case Study 1</h3>
+                            <input type="text" id="case1-title" placeholder="Case Study Title">
+                            <textarea id="case1-desc" placeholder="Case Study Description" rows="3"></textarea>
+                            <label>Case Study Image</label>
+                            <input type="file" class="case-image" accept="image/*">
+                            <input type="hidden" class="case-image-data-url">
+                            <img class="case-image-preview" style="width: 100px; height: 100px; display: none; margin-top: 10px;">
+                        </div>
+                    </div>
+                    <button type="button" id="add-case-study" class="secondary-btn">+ Add Case Study</button>
+                </div>
+
+                <!-- Testimonials Section -->
+                <div class="tab-content" data-tab="testimonials">
+                    <h2>Testimonials</h2>
+                    <div class="form-group">
+                        <label for="testimonials-headline">Testimonials Headline</label>
+                        <input type="text" id="testimonials-headline" value="What Our Clients Say">
+                    </div>
+                    <div class="testimonial-items">
+                        <div class="form-group testimonial-item">
+                            <h3>Testimonial 1</h3>
+                            <input type="text" id="testimonial1-name" placeholder="Client Name">
+                            <input type="text" id="testimonial1-company" placeholder="Company Name">
+                            <textarea id="testimonial1-text" placeholder="Testimonial Text" rows="3"></textarea>
+                            <label>Client Image</label>
+                            <input type="file" class="testimonial-image" accept="image/*">
+                            <input type="hidden" class="testimonial-image-data-url">
+                            <img class="testimonial-image-preview" style="width: 100px; height: 100px; display: none; margin-top: 10px;">
+
+                            <h4 style="margin-top: 20px;">Testimonial Video</h4>
+                            <div class="form-group">
+                                <label>Or Video URL</label>
+                                <input type="url" class="testimonial-video-url" placeholder="https://example.com/video">
+                            </div>
+                            <video class="testimonial-video-preview" controls style="width: 100%; display: none; margin-top: 10px;"></video>
+                        </div>
+                    </div>
+                    <button type="button" id="add-testimonial" class="secondary-btn">+ Add Testimonial</button>
+                </div>
+
+                <!-- Footer & Contact Section -->
+                <div class="tab-content" data-tab="footer">
+                    <h2>Footer & Contact Information</h2>
+                    <div class="form-group">
+                        <label for="contact-email">Contact Email</label>
+                        <input type="email" id="contact-email" value="brandfueldigital@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-phone">Contact Phone</label>
+                        <input type="tel" id="contact-phone" value="+91 95128 41201">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-address">Contact Address</label>
+                        <input type="text" id="contact-address" value="123 Business Rd, Suite 100, Anytown, USA">
+                    </div>
+                    <div class="social-links">
+                        <h3>Social Media Links</h3>
+                        <div class="form-group">
+                            <label for="social-linkedin">LinkedIn URL</label>
+                            <input type="url" id="social-linkedin">
+                        </div>
+                        <div class="form-group">
+                            <label for="social-twitter">Twitter URL</label>
+                            <input type="url" id="social-twitter">
+                        </div>
+                        <div class="form-group">
+                            <label for="social-instagram">Instagram URL</label>
+                            <input type="url" id="social-instagram">
+                        </div>
+                    </div>
+                    <div class="legal-links">
+                        <h3>Legal Links</h3>
+                        <div class="form-group">
+                            <label for="legal-privacy-url">Privacy Policy URL</label>
+                            <input type="url" id="legal-privacy-url" value="#">
+                        </div>
+                        <div class="form-group">
+                            <label for="legal-terms-url">Terms of Service URL</label>
+                            <input type="url" id="legal-terms-url" value="#">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="newsletter-text">Newsletter Signup Text</label>
+                        <input type="text" id="newsletter-text" value="Subscribe to our newsletter">
+                    </div>
+                </div>
+
+                <div class="tab-content" data-tab="login">
+                    <h2>Login Page Content</h2>
+                    <div class="form-group">
+                        <label for="login-headline">Headline</label>
+                        <input type="text" id="login-headline" value="Fueling the next generation of DTC brands.">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-paragraph">Paragraph</label>
+                        <textarea id="login-paragraph" rows="3">Join a community of innovators and builders.</textarea>
+                    </div>
+                </div>
+
+                <div class="tab-content" data-tab="home">
+                    <h2>Home Page Content</h2>
+
+                    <h3>"What We Do" Section</h3>
+                    <div class="form-group">
+                        <label for="what-we-do-headline">Headline</label>
+                        <input type="text" id="what-we-do-headline" value="What We Do">
+                    </div>
+
+                    <h3>"Spotlight Case Study" Section</h3>
+                    <div class="form-group">
+                        <label for="spotlight-case-headline">Headline</label>
+                        <input type="text" id="spotlight-case-headline" value="Spotlight Case Study">
+                    </div>
+
+                    <h3>"Our Fuel System" Section</h3>
+                    <div class="form-group">
+                        <label for="fuel-system-headline">Headline</label>
+                        <input type="text" id="fuel-system-headline" value="Our Fuel System">
+                    </div>
+                    <!-- Step 1 -->
+                    <div class="form-group">
+                        <label for="fuel-system-step1-headline">Step 1 Headline</label>
+                        <input type="text" id="fuel-system-step1-headline" value="Onboard">
+                    </div>
+                    <div class="form-group">
+                        <label for="fuel-system-step1-text">Step 1 Text</label>
+                        <input type="text" id="fuel-system-step1-text" value="Deep dive into your brand and goals.">
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="form-group">
+                        <label for="fuel-system-step2-headline">Step 2 Headline</label>
+                        <input type="text" id="fuel-system-step2-headline" value="Strategize">
+                    </div>
+                    <div class="form-group">
+                        <label for="fuel-system-step2-text">Step 2 Text</label>
+                        <input type="text" id="fuel-system-step2-text" value="Craft a tailored growth plan.">
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="form-group">
+                        <label for="fuel-system-step3-headline">Step 3 Headline</label>
+                        <input type="text" id="fuel-system-step3-headline" value="Execute & Optimize">
+                    </div>
+                    <div class="form-group">
+                        <label for="fuel-system-step3-text">Step 3 Text</label>
+                        <input type="text" id="fuel-system-step3-text" value="Launch campaigns and refine for results.">
+                    </div>
+
+                    <h3>"Social Proof" Section</h3>
+                    <div class="form-group">
+                        <label for="social-proof-headline">Headline</label>
+                        <input type="text" id="social-proof-headline" value="What Our Clients Say">
+                    </div>
+
+                    <h3>"Ready to Fuel Your Growth?" Section</h3>
+                    <div class="form-group">
+                        <label for="cta-block-headline">Headline</label>
+                        <input type="text" id="cta-block-headline" value="Ready to Fuel Your Growth?">
+                    </div>
+                    <div class="form-group">
+                        <label for="cta-block-btn1-text">Button 1 Text</label>
+                        <input type="text" id="cta-block-btn1-text" value="Free Audit">
+                    </div>
+                    <div class="form-group">
+                        <label for="cta-block-btn2-text">Button 2 Text</label>
+                        <input type="text" id="cta-block-btn2-text" value="Quick Call">
+                    </div>
+                    <div class="form-group">
+                        <label for="cta-block-btn3-text">Button 3 Text</label>
+                        <input type="text" id="cta-block-btn3-text" value="RFP">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="primary-btn">Save All Changes</button>
+                    <button type="button" class="preview-btn">Preview Changes</button>
+                </div>
+            </form>
+
+            <div class="config-preview" style="margin-top: 40px; padding: 20px; background: #f5f5f5; border-radius: 10px;">
+                <h2 style="margin-bottom: 20px;">Current Live Configuration</h2>
+                <div id="config-preview-content" style="font-family: monospace; white-space: pre-wrap; padding: 20px; background: #fff; border-radius: 5px; border: 1px solid #e0e0e0;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="js/index.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/nav-auth.js"></script>
+
+    <script src="js/admin-check.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

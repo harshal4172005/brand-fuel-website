@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+    <g>
+        <!-- Flame -->
+        <path d="M200 300 C 200 200, 300 150, 250 50 C 350 150, 300 200, 300 300 Z" fill="#FF6B35"/>
+        <circle cx="220" cy="280" r="10" fill="#FFFFFF" opacity="0.3"/>
+    </g>
+    <!-- Text -->
+    <text x="320" y="250" font-family="Arial Black" font-size="48" fill="#333333">Brand</text>
+    <text x="320" y="320" font-family="Arial Black" font-size="48" fill="#333333">fuel.</text>
+    <text x="320" y="380" font-family="Arial" font-size="24" fill="#666666">digital</text>
+</svg>

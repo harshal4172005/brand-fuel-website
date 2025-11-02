@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Fuel - Sign In / Sign Up</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tomorrow:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        .auth-wrap-fullscreen {
+            display: flex;
+            min-height: 100vh;
+        }
+        .auth-left {
+            flex: 1;
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px;
+        }
+        .auth-left .logo img {
+            height: 60px;
+            margin-bottom: 40px;
+        }
+        .auth-left h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .auth-right {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f9f9f9;
+        }
+        .auth-box{background:#fff;padding:40px;border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,0.1);max-width:480px;width:100%}
+        .tabs{display:flex;border-radius:8px;background:#fafafa;margin-bottom:20px;overflow:hidden}
+        .tab{flex:1;text-align:center;padding:14px 10px;cursor:pointer;font-weight:600;transition: background 0.3s;}
+        .tab.active{background:#fff;color:#000;box-shadow: 0 2px 10px rgba(0,0,0,0.05);}
+        .role-toggle{display:flex;gap:10px;margin-bottom:20px}
+        .role-toggle button{flex:1;padding:10px;border:1px solid #e6e6e6;background:#fff;cursor:pointer;border-radius:6px;font-weight:600;}
+        .role-toggle button.active{background:#ff6b35;color:#fff;border-color:#ff6b35}
+        .form-group{margin-bottom:16px}
+        label{display:block;margin-bottom:8px;font-weight:600}
+        input{width:100%;padding:12px;border:1px solid #e0e0e0;border-radius:6px}
+        .actions{display:flex;gap:12px;margin-top:20px}
+        .secondary{background:#f5f5f5;border:1px solid #f5f5f5;padding:12px;border-radius:6px;cursor:pointer;flex:1;font-weight:600;}
+        .primary{background:linear-gradient(45deg,#ff6b35,#f7931e);color:#fff;padding:12px;border-radius:6px;border:none;cursor:pointer;flex:1;font-weight:600;}
+        .message{color:#ff6b35;margin-top:12px;text-align:center;font-weight:600;}
+
+        @media (max-width: 768px) {
+            .auth-wrap-fullscreen {
+                flex-direction: column;
+            }
+            .auth-left {
+                padding: 40px;
+                text-align: center;
+            }
+            .auth-left h1 {
+                font-size: 36px;
+            }
+        }
+    </style>
+<script>
+        // Redirect if already logged in
+        if (window.BFAuth && window.BFAuth.getLoggedInUser()) {
+            window.location.href = 'index.html';
+        }
+    </script>
+</head>
+<body data-auth="none">
+    <div class="auth-wrap-fullscreen">
+        <div class="auth-left">
+            <div class="auth-left-content">
+                <a href="index.html" class="logo">
+                    <img id="login-logo-img" src="assets/logo.svg" alt="Brand Fuel">
+                </a>
+                <h1 id="login-page-headline">Fueling the next generation of DTC brands.</h1>
+                <p id="login-page-paragraph">Join a community of innovators and builders.</p>
+            </div>
+        </div>
+        <div class="auth-right">
+            <div class="auth-box" role="main">
+                <div class="tabs">
+                    <div class="tab active" data-mode="signin">Sign In</div>
+                    <div class="tab" data-mode="signup">Sign Up</div>
+                </div>
+
+                <div class="role-toggle" role="tablist">
+                    <button class="active" data-role="user">User</button>
+                    <button data-role="admin">Admin</button>
+                </div>
+
+                <form id="auth-form">
+                    <input type="hidden" id="auth-mode" value="signin">
+                    <input type="hidden" id="auth-role" value="user">
+
+                    <div class="form-group signup-field" style="display: none;">
+                        <label for="auth-fullname">Full Name</label>
+                        <input id="auth-fullname">
+                    </div>
+
+                    <div class="form-group signup-field" style="display: none;">
+                        <label for="auth-company">Company Name</label>
+                        <input id="auth-company">
+                    </div>
+
+                    <div class="form-group signup-field" style="display: none;">
+                        <label for="auth-email">Email</label>
+                        <input id="auth-email" type="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="auth-username">Username</label>
+                        <input id="auth-username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="auth-password">Password</label>
+                        <input id="auth-password" type="password" required>
+                    </div>
+
+                    <div class="actions">
+                        <button type="button" class="secondary" id="cancel-btn">Cancel</button>
+                        <button type="submit" class="primary" id="submit-btn">Sign In</button>
+                    </div>
+
+                    <div class="message" id="auth-message" aria-live="polite"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        // UI behavior
+        (function(){
+            const tabs = document.querySelectorAll('.tab');
+            const roleBtns = document.querySelectorAll('.role-toggle button');
+            const authMode = document.getElementById('auth-mode');
+            const authRole = document.getElementById('auth-role');
+            const submitBtn = document.getElementById('submit-btn');
+            const authForm = document.getElementById('auth-form');
+            const authMessage = document.getElementById('auth-message');
+            const cancelBtn = document.getElementById('cancel-btn');
+
+            function setFormMode(mode) {
+                const signupFields = document.querySelectorAll('.signup-field');
+                const signupInputs = document.querySelectorAll('.signup-field input');
+                const emailInput = document.getElementById('auth-email');
+
+                if (mode === 'signup') {
+                    signupFields.forEach(f => f.style.display = 'block');
+                    signupInputs.forEach(f => f.disabled = false);
+                    emailInput.required = true;
+                } else {
+                    signupFields.forEach(f => f.style.display = 'none');
+                    signupInputs.forEach(f => f.disabled = true);
+                    emailInput.required = false;
+                }
+            }
+
+            // Set initial form state
+            setFormMode(authMode.value);
+
+            tabs.forEach(t => t.addEventListener('click', () => {
+                tabs.forEach(x=>x.classList.remove('active'));
+                t.classList.add('active');
+                authMode.value = t.dataset.mode;
+                submitBtn.textContent = t.dataset.mode === 'signin' ? 'Sign In' : 'Sign Up';
+                authMessage.textContent = '';
+
+                setFormMode(t.dataset.mode);
+
+                // Hide admin role for signup
+                const adminRoleBtn = document.querySelector('.role-toggle button[data-role="admin"]');
+                if (t.dataset.mode === 'signup') {
+                    adminRoleBtn.style.display = 'none';
+                    // If admin was active, switch to user
+                    if (authRole.value === 'admin') {
+                        document.querySelector('.role-toggle button[data-role="user"]').click();
+                    }
+                } else {
+                    adminRoleBtn.style.display = 'block';
+                }
+            }));
+
+            roleBtns.forEach(b => b.addEventListener('click', ()=>{
+                roleBtns.forEach(x=>x.classList.remove('active'));
+                b.classList.add('active');
+                authRole.value = b.dataset.role;
+                authMessage.textContent = '';
+            }));
+
+            cancelBtn.addEventListener('click', ()=>{
+                document.getElementById('auth-username').value = '';
+                document.getElementById('auth-password').value = '';
+                authMessage.textContent = '';
+            });
+
+            authForm.addEventListener('submit', function(e){
+                e.preventDefault();
+                const mode = authMode.value;
+                const role = authRole.value;
+                const username = document.getElementById('auth-username').value.trim();
+                const password = document.getElementById('auth-password').value.trim();
+                if(!username || !password){ authMessage.textContent = 'Please enter both username and password.'; return; }
+
+                if(mode === 'signup'){
+                    if (role === 'admin') {
+                        authMessage.textContent = 'Admin signup is not allowed.';
+                        return;
+                    }
+                    const fullname = document.getElementById('auth-fullname').value.trim();
+                    const company = document.getElementById('auth-company').value.trim();
+                    const email = document.getElementById('auth-email').value.trim();
+                    const res = window.BFAuth.signup(username, password, role, { fullname, company, email });
+                    if(!res.ok){ authMessage.textContent = res.message || 'Could not sign up.'; return; }
+                    
+                    // Auto sign in after signup
+                    window.BFAuth.signin(username, password, role);
+                    authMessage.textContent = 'Signup successful. Redirecting...';
+                    setTimeout(()=> {
+                        if(role === 'admin') window.location.href = 'admin.html'; else window.location.href = 'index.html';
+                    }, 500);
+                } else {
+                    const res = window.BFAuth.signin(username, password, role);
+                    if(!res.ok){ authMessage.textContent = res.message || 'Sign in failed.'; return; }
+                    authMessage.textContent = 'Signed in. Redirecting...';
+                    setTimeout(()=> {
+                        if(role === 'admin') window.location.href = 'admin.html'; else window.location.href = 'index.html';
+                    }, 300);
+                }
+            });
+        })();
+    </script>
+    <script>
+        // Load dynamic logo
+        (function() {
+            const data = JSON.parse(localStorage.getItem('brandFuelData')) || {};
+            
+            // Load logo
+            const logoImage = localStorage.getItem('logo-image');
+            const logoSize = data.logoSize || 60;
+            const logoImgEl = document.getElementById('login-logo-img');
+            if (logoImgEl) {
+                if (logoImage) {
+                    logoImgEl.src = logoImage;
+                }
+                logoImgEl.style.height = `${logoSize}px`;
+            }
+
+            // Load content
+            if (data.loginPage) {
+                const headlineEl = document.getElementById('login-page-headline');
+                if (headlineEl) {
+                    headlineEl.textContent = data.loginPage.headline;
+                }
+                const paragraphEl = document.getElementById('login-page-paragraph');
+                if (paragraphEl) {
+                    paragraphEl.textContent = data.loginPage.paragraph;
+                }
+            }
+        })();
+    </script>
+    <script>
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'brandfuel-content-updated') {
+                window.location.reload();
+            }
+        });
+    </script>
+</body>
+</html>
