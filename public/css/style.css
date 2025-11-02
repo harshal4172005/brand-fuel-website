@@ -46,6 +46,19 @@ body {
     color: #000;
     background: #fff;
     line-height: 1.6;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Ensure all images are responsive by default */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Responsive video */
+video {
+    max-width: 100%;
+    height: auto;
 }
 
 .container {
@@ -648,43 +661,368 @@ nav a.active {
     top: 9px;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .hero h1 {
-        font-size: 48px;
+/* ========================================
+   RESPONSIVE DESIGN - ALL DEVICES
+   ======================================== */
+
+/* Extra Small Devices (Mobile Phones - 320px to 575px) */
+@media (max-width: 575px) {
+    .container {
+        padding: 0 15px;
     }
+    
+    /* Hero Section */
+    .hero {
+        height: auto;
+        min-height: 100vh;
+        padding: 60px 0;
+    }
+    
+    .hero h1 {
+        font-size: 32px;
+        line-height: 1.2;
+        margin-bottom: 15px;
+        letter-spacing: -1px;
+    }
+    
+    .hero p {
+        font-size: 18px;
+        margin-bottom: 30px;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+    }
+    
+    .primary-cta, .secondary-cta {
+        width: 100%;
+        padding: 14px 20px;
+        font-size: 16px;
+    }
+    
+    /* Trust Strip */
+    .trust-strip {
+        padding: 30px 0;
+    }
+    
+    .trust-strip .container {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+    
+    .logos {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    .logos img {
+        height: 30px;
+    }
+    
+    /* Sections */
+    .what-we-do, .spotlight-case, .process, .social-proof, .cta-block {
+        padding: 40px 0;
+    }
+    
+    .what-we-do h2, .spotlight-case h2, .process h2, .social-proof h2, .cta-block h2 {
+        font-size: 32px;
+        margin-bottom: 40px;
+    }
+    
+    .cards {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .card {
+        padding: 30px 20px;
+    }
+    
+    .card h3 {
+        font-size: 22px;
+    }
+    
+    /* Timeline */
+    .timeline {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    /* Testimonials */
+    .testimonials {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .testimonial {
+        padding: 30px 20px;
+    }
+    
+    .testimonials-container {
+        grid-template-columns: 1fr;
+    }
+    
+    /* CTA Options */
+    .cta-options {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .cta-option {
+        width: 100%;
+        padding: 14px 20px;
+        font-size: 16px;
+    }
+    
+    /* Footer */
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        text-align: center;
+    }
+    
+    /* Services */
+    .service-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .service-card {
+        padding: 30px 20px;
+    }
+    
+    /* Work Items */
+    .work-items {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Page Header */
+    .page-header {
+        padding: 60px 0 40px;
+    }
+    
+    .page-header h1 {
+        font-size: 32px;
+    }
+    
+    /* Contact */
+    .contact-wrapper {
+        padding: 30px 20px;
+    }
+    
+    .contact-form h3, .contact-details h3 {
+        font-size: 24px;
+    }
+    
+    /* Navigation */
+    .top-nav {
+        padding: 15px 0;
+    }
+    
+    .logo img {
+        height: 28px;
+    }
+    
+    nav ul {
+        display: none;
+    }
+    
+    .mobile-nav-toggle {
+        display: block;
+    }
+}
+
+/* Small Devices (Landscape Phones - 576px to 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+    .hero h1 {
+        font-size: 42px;
+    }
+    
+    .hero p {
+        font-size: 22px;
+    }
+    
+    .what-we-do h2, .spotlight-case h2, .process h2, .social-proof h2, .cta-block h2 {
+        font-size: 38px;
+    }
+    
     .cards {
         grid-template-columns: 1fr;
     }
+    
+    .testimonials {
+        grid-template-columns: 1fr;
+    }
+    
+    .testimonials-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .service-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .work-items {
+        grid-template-columns: 1fr;
+    }
+    
+    nav ul {
+        display: none;
+    }
+    
+    .mobile-nav-toggle {
+        display: block;
+    }
+}
+
+/* Medium Devices (Tablets - 768px to 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+    .hero h1 {
+        font-size: 56px;
+    }
+    
+    .hero p {
+        font-size: 24px;
+    }
+    
+    .what-we-do h2, .spotlight-case h2, .process h2, .social-proof h2, .cta-block h2 {
+        font-size: 42px;
+    }
+    
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+    
+    .testimonials {
+        grid-template-columns: 1fr;
+    }
+    
+    .testimonials-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .service-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .work-items {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .footer-content {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
     .timeline {
         flex-direction: column;
         gap: 40px;
     }
-    .testimonials {
-        grid-template-columns: 1fr;
-    }
-    .footer-content {
-        grid-template-columns: 1fr;
-        text-align: center;
+    
+    .cta-buttons {
+        flex-wrap: wrap;
     }
     
-    /* Mobile Nav Responsive */
+    nav ul {
+        display: flex;
+        gap: 20px;
+    }
+    
+    nav a {
+        font-size: 14px;
+    }
+}
+
+/* Large Devices (Desktop - 992px to 1199px) */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .cards {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+    }
+    
+    .testimonials-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .service-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .work-items {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Touch-friendly elements for mobile */
+@media (max-width: 768px) {
+    /* Make buttons and links easier to tap */
+    a, button, .cta-button, .primary-cta, .secondary-cta, .cta-option {
+        min-height: 44px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Input fields should be larger on mobile */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="url"],
+    input[type="tel"],
+    textarea,
+    select {
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 12px;
+    }
+    
+    /* Images should scale */
+    img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+    }
+    
+    /* Video should scale */
+    video {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    /* Ensure all media is responsive */
+    iframe, embed, object {
+        max-width: 100%;
+    }
+    
+    /* Navigation */
     nav ul {
         display: none;
     }
+    
     .mobile-nav-toggle {
         display: block;
     }
+    
     .logo img {
         height: 30px;
     }
+    
     .nav-auth-item {
         margin: 10px 0 !important;
     }
+    
     .mobile-nav .nav-auth-item {
         border-top: 1px solid #eee;
         padding-top: 15px;
         margin-top: 15px !important;
+    }
+    
+    /* Contact Page */
+    .contact-wrapper {
+        padding: 40px 20px;
     }
 }
 

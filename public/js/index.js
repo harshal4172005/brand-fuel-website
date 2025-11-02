@@ -131,6 +131,17 @@
                 spotlightEl.innerHTML = data.work.spotlightCase;
             }
         }
+
+        // Update Quick Call link with phone number from admin
+        if (data.footer && data.footer.contactPhone) {
+            const quickCallBtn = document.getElementById('cta-block-btn2');
+            if (quickCallBtn) {
+                // Format phone for tel: link (remove spaces, keep digits and +)
+                const telNumber = data.footer.contactPhone.replace(/[^\d+]/g, '');
+                quickCallBtn.href = `tel:${telNumber}`;
+                quickCallBtn.setAttribute('aria-label', `Quick Call: ${data.footer.contactPhone}`);
+            }
+        }
     }
 
     // Initialize on DOM ready

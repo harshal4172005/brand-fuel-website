@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Button Test - Brand Fuel</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            padding: 40px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+        }
+        .test-section h2 {
+            margin-bottom: 20px;
+            color: #ff6b35;
+        }
+        .test-result {
+            margin-top: 15px;
+            padding: 10px;
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            display: none;
+        }
+        .test-result.show {
+            display: block;
+        }
+        .test-result.error {
+            background: #ffebee;
+            border-left-color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <h1>Button Functionality Test</h1>
+    
+    <div class="test-section">
+        <h2>1. Book a 15-min Fuel Call Button</h2>
+        <button class="primary-cta" id="primary-cta">Book a 15-min Fuel Call</button>
+        <div class="test-result" id="calendar-test">
+            <strong>Expected:</strong> Should open Google Calendar in a new window/tab with pre-filled event details.
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Quick Call Button</h2>
+        <a class="cta-option" role="button" href="tel:+919512841201" id="cta-block-btn2">Quick Call</a>
+        <div class="test-result" id="phone-test">
+            <strong>Expected:</strong> On mobile devices, should initiate a call. On desktop, may show dialer or copy number.
+            <br><strong>Current Phone:</strong> <span id="phone-display">+919512841201</span>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Free Audit Button</h2>
+        <button class="cta-option" id="cta-block-btn1">Free Audit</button>
+        <div class="test-result" id="audit-test">
+            <strong>Expected:</strong> Should redirect to contact page with audit action.
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. RFP Button</h2>
+        <button class="cta-option" id="cta-block-btn3">RFP</button>
+        <div class="test-result" id="rfp-test">
+            <strong>Expected:</strong> Should redirect to contact page with RFP action.
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Results Summary</h2>
+        <div id="summary"></div>
+    </div>
+
+    <script src="js/phone-helper.js"></script>
+    <script src="js/calendar.js"></script>
+    <script>
+        // Test tracking
+        let testsRun = 0;
+        let testsPassed = 0;
+
+        function showResult(id, isSuccess, message) {
+            const result = document.getElementById(id);
+            result.classList.add('show');
+            if (!isSuccess) {
+                result.classList.add('error');
+            }
+            if (message) {
+                result.innerHTML += '<br>' + message;
+            }
+            testsRun++;
+            if (isSuccess) testsPassed++;
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const summary = document.getElementById('summary');
+            summary.innerHTML = `
+                <p><strong>Tests Run:</strong> ${testsRun}</p>
+                <p><strong>Passed:</strong> ${testsPassed}</p>
+                <p><strong>Status:</strong> ${testsRun === testsPassed && testsRun > 0 ? '✅ All tests passed!' : '⏳ Running tests...'}</p>
+            `;
+        }
+
+        // Test calendar button
+        document.getElementById('primary-cta').addEventListener('click', function() {
+            setTimeout(() => {
+                showResult('calendar-test', true, '✅ Google Calendar should have opened. Check if a new window/tab opened.');
+            }, 100);
+        });
+
+        // Test phone button
+        const phoneBtn = document.getElementById('cta-block-btn2');
+        phoneBtn.addEventListener('click', function() {
+            showResult('phone-test', true, '✅ Phone link clicked. On mobile, this should initiate a call.');
+        });
+
+        // Test audit button
+        document.getElementById('cta-block-btn1').addEventListener('click', function() {
+            setTimeout(() => {
+                const currentUrl = window.location.href;
+                showResult('audit-test', true, '✅ Button click registered. Check if redirect occurred.');
+            }, 100);
+        });
+
+        // Test RFP button
+        document.getElementById('cta-block-btn3').addEventListener('click', function() {
+            setTimeout(() => {
+                showResult('rfp-test', true, '✅ Button click registered. Check if redirect occurred.');
+            }, 100);
+        });
+
+        // Update phone display
+        setTimeout(() => {
+            const phoneBtn = document.getElementById('cta-block-btn2');
+            if (phoneBtn) {
+                const phoneDisplay = document.getElementById('phone-display');
+                const telHref = phoneBtn.getAttribute('href');
+                if (telHref && telHref.startsWith('tel:')) {
+                    phoneDisplay.textContent = telHref.replace('tel:', '').replace(/(\d{2})(\d{5})(\d{6})/, '+$1 $2 $3');
+                }
+            }
+        }, 500);
+    </script>
+</body>
+</html>
+

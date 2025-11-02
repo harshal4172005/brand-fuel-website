@@ -30,10 +30,30 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // CTA button interactions
-    document.querySelectorAll('.primary-cta, .cta-option').forEach(btn => {
-        btn.addEventListener('click', function() {
-            // Simulate booking or form
-            alert('Thank you! We\'ll be in touch soon.');
+    // Note: Primary CTA (Book a Call) is handled by calendar.js
+    // Quick Call is handled by phone-helper.js with tel: links
+    // Only handle other CTA options that need custom behavior
+    
+    document.querySelectorAll('.cta-option').forEach(btn => {
+        // Skip Quick Call (handled by tel: link) and primary-cta (handled by calendar.js)
+        if (btn.id === 'cta-block-btn2' || btn.classList.contains('primary-cta')) {
+            return;
+        }
+        
+        btn.addEventListener('click', function(e) {
+            const buttonText = this.textContent.trim();
+            
+            // Handle different CTA options
+            if (buttonText.includes('Free Audit') || buttonText.includes('Audit')) {
+                e.preventDefault();
+                // Could open a form or redirect to contact page
+                window.location.href = 'contact.html?action=audit';
+            } else if (buttonText.includes('RFP')) {
+                e.preventDefault();
+                // Could open RFP form or contact page
+                window.location.href = 'contact.html?action=rfp';
+            }
+            // Other buttons can have their default behavior
         });
     });
 

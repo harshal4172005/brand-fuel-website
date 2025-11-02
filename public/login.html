@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Brand Fuel - Sign In / Sign Up</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Tomorrow:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -61,6 +61,41 @@
             }
             .auth-left h1 {
                 font-size: 36px;
+            }
+            .auth-box {
+                padding: 30px 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .auth-left {
+                padding: 30px 20px;
+            }
+            .auth-left h1 {
+                font-size: 28px;
+            }
+            .auth-box {
+                padding: 25px 15px;
+            }
+            .tabs {
+                margin-bottom: 15px;
+            }
+            .tab {
+                padding: 12px 8px;
+                font-size: 14px;
+            }
+            .form-group {
+                margin-bottom: 14px;
+            }
+            input {
+                padding: 10px;
+            }
+            .actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .primary, .secondary {
+                width: 100%;
             }
         }
     </style>

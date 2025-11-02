@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Brand Fuel Admin Panel</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Tomorrow:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -166,6 +166,25 @@
         @media (max-width: 480px) {
             .tab-btn {
                 flex-basis: 100%; /* One tab per row */
+            }
+            .admin-form {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            h2 {
+                font-size: 20px;
+            }
+        }
+        
+        /* Tablet responsive */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .admin-form {
+                padding: 25px;
+            }
+            .tab-btn {
+                flex-basis: 33.333%; /* Three tabs per row */
             }
         }
     </style>
